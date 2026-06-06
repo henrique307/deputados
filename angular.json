@@ -25,13 +25,8 @@
               }
             ],
             "styles": ["src/styles.css"],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
             "security": {
               "allowedHosts": []
-            },
-            "ssr": {
-              "entry": "src/server.ts"
             }
           },
           "configurations": {
@@ -70,7 +65,7 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "allowedHosts": ["80bb-2804-29b8-509c-ad8e-7cb7-5ccb-2870-690.ngrok-free.app"]
+            "allowedHosts": ["1250-2804-29b8-509c-ad8e-2bad-8c1f-710-4284.ngrok-free.app"]
           }
         },
         "test": {
