@@ -2,7 +2,7 @@
   <button
     type="button"
     (click)="toggle()"
-    class="grid w-full grid-cols-[auto_auto_1fr_auto] items-center gap-4 px-4 py-5 text-left sm:gap-6 sm:px-6"
+    class="grid w-full grid-cols-[auto_auto_1fr] items-center gap-4 px-4 py-5 text-left sm:grid-cols-[auto_auto_1fr_auto] sm:gap-6 sm:px-6"
   >
     <span class="font-mono text-xs tabular-nums text-muted-foreground sm:text-sm">
       {{ rank.toString().padStart(2, '0') }}
@@ -13,7 +13,7 @@
       [alt]="d.nome"
       loading="lazy"
       (error)="hideImage($event)"
-      class="h-12 w-12 rounded-full border border-ink/20 object-cover  transition-all duration-300 group-hover:grayscale-0 sm:h-14 sm:w-14"
+      class="h-12 w-12 rounded-full border border-ink/20 object-cover transition-all duration-300 group-hover:grayscale-0 sm:h-14 sm:w-14"
     />
 
     <div class="min-w-0">
@@ -26,16 +26,14 @@
       </div>
 
       <div class="mt-1 text-xs text-muted-foreground">
-        {{ d.quantidadeDespesas }}
-        despesas declaradas
+        {{ d.quantidadeDespesas }} despesas declaradas
       </div>
     </div>
 
-    <div class="flex items-center gap-3">
-      <div class="text-right">
-        <div class="font-mono text-base tabular-nums sm:text-xl">
-          {{ fmtBRL(d.totalGeral) }}
-        </div>
+
+    <div class="col-span-3 flex items-center justify-between sm:col-span-1 sm:justify-end sm:gap-3">
+      <div class="font-mono text-base tabular-nums sm:text-xl">
+        {{ fmtBRL(d.totalGeral) }}
       </div>
 
       <svg

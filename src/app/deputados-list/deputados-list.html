@@ -21,7 +21,7 @@
       />
     </div>
 
-    <div class="flex gap-1 rounded-md border border-input bg-card p-1">
+    <div class="flex gap-1 rounded-md border border-input bg-card p-1 w-fit">
       @for (option of sortOptions; track `option-${$index}`) {
         <button
           (click)="sort = option[0]"

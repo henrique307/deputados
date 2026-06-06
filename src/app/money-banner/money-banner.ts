@@ -9,7 +9,7 @@ import {
   PLATFORM_ID,
   SimpleChanges,
 } from '@angular/core';
-import { fmtBRL } from '../../lib/format';
+import { fmtBRL, nomeMes } from '../../lib/format';
 
 @Component({
   selector: 'app-money-banner',
@@ -43,7 +43,7 @@ export class MoneyBanner implements OnChanges {
     }
 
     const start = performance.now();
-    const duration = 1800;
+    const duration = 2000;
 
     this.ngZone.runOutsideAngular(() => {
       const tick = (time: number) => {
@@ -60,14 +60,7 @@ export class MoneyBanner implements OnChanges {
     });
   }
 
-  nomeMes(mesRef: string): string {
-    const date = new Date(mesRef);
-
-    return date.toLocaleDateString('pt-BR', {
-      month: 'long',
-      year: 'numeric',
-    });
-  }
+  nomeMes = nomeMes
 
   stats = [
     { l: 'Combustível', v: '≈ 8%' },

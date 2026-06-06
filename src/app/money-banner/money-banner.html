@@ -1,14 +1,13 @@
 <section class="relative overflow-hidden border-b border-ink/15 bg-newsprint">
-  <div class="mx-auto max-w-6xl px-6 pt-16 pb-20 sm:pt-24 sm:pb-28">
+  <div class="mx-auto max-w-6xl px-6 pt-8 pb-12 sm:pt-16 sm:pb-16">
     <div class="flex items-center gap-3 text-xs uppercase tracking-[0.25em] text-muted-foreground">
       <span class="inline-block h-px w-8 bg-ink/40"></span>
 
       Edição de {{ nomeMes(mesRef) }}
     </div>
 
-    <h1 class="mt-8 font-display text-[clamp(2rem,5.5vw,4.2rem)] leading-[0.95]">
+    <h1 class="mt-8 font-display text-[clamp(2rem,5vw,4.2rem)] leading-[0.95]">
       Foram gastos
-      <br />
 
       <span class="inline-block text-money ticker-shadow">
         {{ fmtBRL(shown) }}
@@ -16,15 +15,15 @@
 
       <br />
 
-      <span class="text-ink/85"> do seu dinheiro nos últimos meses. </span>
+      <span> do seu dinheiro nos últimos meses. </span>
     </h1>
 
-    <p class="mt-8 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+    <p class="mt-8 max-w-4xl text-base leading-relaxed text-muted-foreground sm:text-lg">
       Esse é o valor declarado em despesas parlamentares por
 
       <span class="font-semibold text-foreground"> {{ qtdDeputados }} deputados federais </span>
 
-      em {{ nomeMes(mesRef) }}, custeado com recursos públicos da Cota para o Exercício da Atividade
+      nos últimos meses, custeado com recursos públicos da Cota para o Exercício da Atividade
       Parlamentar.
     </p>
 

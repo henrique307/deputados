@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Despesa } from '../../data/deputados';
-import { fmtBRL } from '../../lib/format';
+import { fmtBRL, nomeMes } from '../../lib/format';
 
 @Component({
   selector: 'app-deputado-card',
@@ -37,12 +37,7 @@ export class DeputadoCard {
     return Object.entries(this.d.porMes).sort((a, b) => a[0].localeCompare(b[0]));
   }
 
-  nomeMes(mes: string): string {
-    return new Date(mes).toLocaleDateString('pt-BR', {
-      month: 'long',
-      year: 'numeric',
-    });
-  }
+  nomeMes = nomeMes
 
   hideImage(event: Event): void {
     const img = event.target as HTMLImageElement;
