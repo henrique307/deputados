@@ -24,7 +24,9 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.css"],
+            "styles": [
+              "src/styles.css"
+            ],
             "security": {
               "allowedHosts": []
             }
@@ -65,11 +67,13 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "allowedHosts": ["1250-2804-29b8-509c-ad8e-2bad-8c1f-710-4284.ngrok-free.app"]
+            "allowedHosts": [
+              "1250-2804-29b8-509c-ad8e-2bad-8c1f-710-4284.ngrok-free.app"
+            ]
           }
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@analogjs/vitest-angular:test"
         }
       }
     }
