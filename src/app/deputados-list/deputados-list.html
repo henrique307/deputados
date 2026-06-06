@@ -1,0 +1,54 @@
+<section class="mx-auto max-w-6xl px-6 py-8">
+  <header class="mb-10 flex flex-col gap-2">
+    <div class="text-xs uppercase tracking-[0.25em] text-muted-foreground">O ranking</div>
+
+    <h2 class="font-display text-4xl sm:text-5xl">Quem gastou mais com o dinheiro público</h2>
+
+    <p class="max-w-2xl text-muted-foreground">
+      Despesas ordenadas pelo total declarado. Clique em um nome para abrir o detalhamento por tipo
+      de gasto e mês.
+    </p>
+  </header>
+
+  <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+    <div class="relative flex-1">
+      <lucide-angular [img]="Search" class="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+
+      <input
+        [(ngModel)]="q"
+        placeholder="Pesquisar por nome…"
+        class="w-full rounded-md border border-input bg-card py-3 pl-10 pr-4 text-base outline-none transition-colors focus:border-ink"
+      />
+    </div>
+
+    <div class="flex gap-1 rounded-md border border-input bg-card p-1">
+      @for (option of sortOptions; track `option-${$index}`) {
+        <button
+          (click)="sort = option[0]"
+          [class.bg-ink]="sort === option[0]"
+          [class.text-paper]="sort === option[0]"
+          class="rounded px-3 py-2 text-sm transition-colors"
+        >
+          {{ option[1] }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="overflow-hidden rounded-lg border border-ink/15 bg-card">
+    @if (filtrados.length) {
+      @for (deputado of filtrados; track `deputado-${$index}`) {
+        <app-deputado-card [d]="deputado" [rank]="$index + 1" [max]="max" />
+      }
+    }
+    <ng-template #empty>
+      <div class="p-10 text-center text-muted-foreground">
+        Nenhum deputado encontrado para "{{ q }}".
+      </div>
+    </ng-template>
+  </div>
+
+  <p class="mt-6 text-xs text-muted-foreground">
+    Mostrando {{ filtrados.length }} de {{ deputados.length }} deputados.
+  </p>
+</section>
