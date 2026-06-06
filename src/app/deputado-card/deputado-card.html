@@ -1,0 +1,116 @@
+<article class="group border-b border-ink/15 transition-colors hover:bg-ink/2.5">
+  <button
+    type="button"
+    (click)="toggle()"
+    class="grid w-full grid-cols-[auto_auto_1fr_auto] items-center gap-4 px-4 py-5 text-left sm:gap-6 sm:px-6"
+  >
+    <span class="font-mono text-xs tabular-nums text-muted-foreground sm:text-sm">
+      {{ rank.toString().padStart(2, '0') }}
+    </span>
+
+    <img
+      [src]="d.urlFoto"
+      [alt]="d.nome"
+      loading="lazy"
+      (error)="hideImage($event)"
+      class="h-12 w-12 rounded-full border border-ink/20 object-cover  transition-all duration-300 group-hover:grayscale-0 sm:h-14 sm:w-14"
+    />
+
+    <div class="min-w-0">
+      <div class="truncate font-display text-xl sm:text-2xl">
+        {{ d.nome }}
+      </div>
+
+      <div class="mt-1 h-0.75 w-full overflow-hidden rounded-full bg-ink/10">
+        <div class="h-full bg-money" [style.width.%]="pct"></div>
+      </div>
+
+      <div class="mt-1 text-xs text-muted-foreground">
+        {{ d.quantidadeDespesas }}
+        despesas declaradas
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <div class="text-right">
+        <div class="font-mono text-base tabular-nums sm:text-xl">
+          {{ fmtBRL(d.totalGeral) }}
+        </div>
+      </div>
+
+      <svg
+        class="h-4 w-4 text-muted-foreground transition-transform"
+        [class.rotate-180]="open"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </button>
+
+  @if (open) {
+    <div
+      class="grid gap-8 border-t border-dashed border-ink/15 bg-secondary/40 px-4 py-6 sm:grid-cols-2 sm:px-6"
+    >
+      <div>
+        <h3 class="mb-3 text-xs uppercase tracking-wider text-muted-foreground">
+          Por tipo de despesa
+        </h3>
+
+        <ul class="space-y-2">
+          @for (tipo of tipos; track `tipo-${$index}`) {
+            <li>
+              <div class="flex items-baseline justify-between gap-2 text-sm">
+                <span class="truncate">
+                  {{ tipo[0].replace('.', '') }}
+                </span>
+
+                <span class="font-mono tabular-nums">
+                  {{ fmtBRL(tipo[1].total) }}
+                </span>
+              </div>
+
+              <div class="mt-1 h-1 w-full overflow-hidden rounded bg-ink/10">
+                <div
+                  class="h-full bg-ink/70"
+                  [style.width.%]="(tipo[1].total / d.totalGeral) * 100"
+                ></div>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="mb-3 text-xs uppercase tracking-wider text-muted-foreground">Por mês</h3>
+
+        <ul class="space-y-2">
+          @for (mes of meses; track `mes-${$index}`) {
+            <li class="flex items-baseline justify-between text-sm">
+              <span class="capitalize">
+                {{ nomeMes(mes[0]) }}
+              </span>
+
+              <span class="font-mono tabular-nums">
+                {{ fmtBRL(mes[1]) }}
+              </span>
+            </li>
+          }
+        </ul>
+
+        <div class="mt-6 text-xs text-muted-foreground">
+          <span class="font-medium text-foreground"> Contato: </span>
+
+          <a
+            [href]="'mailto:' + d.email"
+            class="underline decoration-ink/30 underline-offset-2 hover:decoration-ink"
+          >
+            {{ d.email }}
+          </a>
+        </div>
+      </div>
+    </div>
+  }
+</article>
