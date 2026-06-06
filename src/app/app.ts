@@ -1,8 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import deputas from '../../resumoDaFestaDasPutas.json';
-import { CommonModule, CurrencyPipe, PercentPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { dataset } from '../data/deputados';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MoneyBanner } from './money-banner/money-banner';
+import { DeputadosList } from './deputados-list/deputados-list';
+import { ultimoMes } from '../lib/format';
 
 export interface DespesaData {
   totalGeral: number;
@@ -17,7 +20,7 @@ export interface DespesaData {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, CurrencyPipe, PercentPipe, ReactiveFormsModule],
+  imports: [RouterOutlet, CommonModule, ReactiveFormsModule, MoneyBanner, DeputadosList],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -25,7 +28,17 @@ export class App {
   protected readonly title = signal('deputas_webapp');
 
   pesquisa = new FormControl('');
-  deputas: any[] = deputas.sort((a, b) => b.totalGeral - a.totalGeral);
+  despesas: any[] = dataset.despesas.sort((a, b) => b.totalGeral - a.totalGeral);
+  qtdDeputados = this.despesas.length
+
+  mesRef =
+    this.despesas
+      .map((d) => ultimoMes(d.porMes))
+      .filter(Boolean)
+      .sort()
+      .pop() ?? '2025-12';
+
+  totalMes = this.despesas.reduce((acc, d) => acc + (d.totalGeral ?? 0), 0);
 
   initials(deputa: DespesaData): string {
     return deputa.nome
@@ -34,12 +47,6 @@ export class App {
       .slice(0, 2)
       .map((n) => n[0])
       .join('');
-  }
-
-  get filteredItems() {
-    const term = this.pesquisa.value?.toLowerCase() ?? '';
-
-    return this.deputas.filter((deputa) => deputa.nome.toLowerCase().includes(term));
   }
 
   meses(deputa: DespesaData) {
