@@ -1,9 +1,13 @@
+import { setGlobalDispatcher } from 'undici';
+import { dispatcher } from './proxy.agent';
+
+//Set Proxy Agent
+setGlobalDispatcher(dispatcher);
+
 import { getDatabase, ref, set } from 'firebase/database';
 import { initializeApp, deleteApp } from 'firebase/app';
 import { firebaseConfig } from './firebase.config';
 import { Deputado, fetchDeputados } from './fetchDeputados';
-import { setGlobalDispatcher } from 'undici';
-import { dispatcher } from './proxy.agent';
 
 const URL = 'https://dadosabertos.camara.leg.br/api/v2';
 const app = initializeApp(firebaseConfig);
@@ -92,11 +96,8 @@ function sanitizeKeys(data: any): any {
 
 async function main() {
   const despesas = [];
-  setGlobalDispatcher(dispatcher);
-  
-  const deputados = await fetchDeputados();
 
-  //Set Proxy Agent
+  const deputados = await fetchDeputados();
 
   for (const deputado of deputados) {
     console.log(`🔍 Buscando despesas de ${deputado.nome}...`);
