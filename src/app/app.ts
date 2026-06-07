@@ -21,7 +21,7 @@ export class App {
   constructor(
     private meta: Meta,
     private seoTitle: Title,
-  ) {}
+  ) { }
 
   pesquisa = new FormControl('');
   despesas = signal<Despesa[]>([]);
@@ -38,7 +38,7 @@ export class App {
   totalMes = computed(() => this.despesas().reduce((acc, d) => acc + (d.totalGeral ?? 0), 0));
 
   async ngOnInit() {
-    this.seoTitle.setTitle('deputados — Gastos parlamentares dos deputados federais');
+    this.seoTitle.setTitle('Olho na Cota — Gastos parlamentares dos deputados federais');
 
     this.meta.updateTag({
       name: 'description',
@@ -53,38 +53,38 @@ export class App {
         'gastos parlamentares, CEAP, cota parlamentar, deputados federais, transparência, câmara dos deputados',
     });
     this.meta.updateTag({ name: 'author', content: 'deputados' });
-    this.meta.updateTag({ name: 'canonical', content: 'https://deputados.com.br' });
+    this.meta.updateTag({ name: 'canonical', content: 'https://deputados.pages.dev/' });
     this.meta.updateTag({ charset: 'UTF-8' });
     this.meta.updateTag({ name: 'viewport', content: 'width=device-width, initial-scale=1' });
 
     this.meta.updateTag({ property: 'og:type', content: 'website' });
-    this.meta.updateTag({ property: 'og:site_name', content: 'deputados' });
+    this.meta.updateTag({ property: 'og:site_name', content: 'Olho na Cota' });
     this.meta.updateTag({ property: 'og:locale', content: 'pt_BR' });
-    this.meta.updateTag({ property: 'og:url', content: 'https://deputados.com.br' });
+    this.meta.updateTag({ property: 'og:url', content: 'https://deputados.pages.dev/' });
     this.meta.updateTag({
       property: 'og:title',
-      content: 'deputados — Gastos parlamentares dos deputados federais',
+      content: 'Olho na Cota — Gastos parlamentares dos deputados federais',
     });
     this.meta.updateTag({
       property: 'og:description',
       content:
         'Acompanhe os gastos declarados pelos deputados federais com a cota parlamentar (CEAP). Dados abertos com transparência.',
     });
-    this.meta.updateTag({ property: 'og:image', content: 'https://deputados.com.br/og-image.png' });
-    this.meta.updateTag({ property: 'og:image:width', content: '1200' });
-    this.meta.updateTag({ property: 'og:image:height', content: '630' });
+    this.meta.updateTag({ property: 'og:image', content: 'https://deputados.pages.dev/faicon.ico' });
+    this.meta.updateTag({ property: 'og:image:width', content: '512' });
+    this.meta.updateTag({ property: 'og:image:height', content: '512' });
 
     this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.meta.updateTag({
       name: 'twitter:title',
-      content: 'deputados — Gastos parlamentares dos deputados federais',
+      content: 'Olho na Cota — Gastos parlamentares dos deputados federais',
     });
     this.meta.updateTag({
       name: 'twitter:description',
       content:
         'Acompanhe os gastos declarados pelos deputados federais com a cota parlamentar (CEAP). Dados abertos com transparência.',
     });
-    this.meta.updateTag({ name: 'twitter:image', content: 'https://deputados.com.br/og-image.png' });
+    this.meta.updateTag({ name: 'twitter:image', content: 'https://deputados.pages.dev/faicon.ico' });
 
     const data: Despesa[] = (await readDataFromDatabase('/')).despesas;
 
