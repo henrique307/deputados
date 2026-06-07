@@ -1,20 +1,13 @@
 import { getDatabase, ref, set } from 'firebase/database';
 import { initializeApp, deleteApp } from 'firebase/app';
 import { firebaseConfig } from './firebase.config';
-import { fetchDeputados } from './fetchDeputados';
+import { Deputado, fetchDeputados } from './fetchDeputados';
 import { setGlobalDispatcher } from 'undici';
 import { dispatcher } from './proxy.agent';
 
 const URL = 'https://dadosabertos.camara.leg.br/api/v2';
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app); // Obtenha uma referência para o Realtime Database
-
-interface Deputa {
-  id: number;
-  nome: string;
-  email: string;
-  urlFoto: string;
-}
 
 async function fetchDespesa(putaId: number) {
   const res = await fetch(`${URL}/deputados/${putaId}/despesas`);
@@ -36,14 +29,14 @@ async function writeJsonDataToDatabase(data: any) {
   }
 }
 
-function gerarResumo(despesas: any[], puta: Deputa) {
+function gerarResumo(despesas: any[], deputado: Deputado) {
   const resumo = {
     totalGeral: 0,
     quantidadeDespesas: despesas.length,
-    nome: puta.nome,
-    email: puta.email,
-    id: puta.id,
-    urlFoto: puta.urlFoto,
+    nome: deputado.nome,
+    email: deputado.email,
+    id: deputado.id,
+    urlFoto: deputado.urlFoto,
     porMes: {} as Record<string, number>,
     porTipoDespesa: {} as Record<string, { total: number; quantidade: number }>,
     porFornecedor: {} as Record<
@@ -99,15 +92,16 @@ function sanitizeKeys(data: any): any {
 
 async function main() {
   const despesas = [];
+  setGlobalDispatcher(dispatcher);
+  
   const deputados = await fetchDeputados();
 
   //Set Proxy Agent
-  setGlobalDispatcher(dispatcher);
 
-  for (const puta of deputados) {
-    console.log(`🔍 Buscando despesas de ${puta.nome}...`);
-    const despesa = await fetchDespesa(puta.id);
-    const resumo = gerarResumo(despesa.dados, puta as Deputa);
+  for (const deputado of deputados) {
+    console.log(`🔍 Buscando despesas de ${deputado.nome}...`);
+    const despesa = await fetchDespesa(deputado.id);
+    const resumo = gerarResumo(despesa.dados, deputado as Deputado);
     despesas.push(resumo);
   }
 

@@ -1,6 +1,6 @@
 export const URL = "https://dadosabertos.camara.leg.br/api/v2";
 
-interface Deputado {
+export interface Deputado {
   id: number;
   uri: string;
   nome: string;
@@ -12,7 +12,7 @@ interface Deputado {
   email: string;
 }
 
-interface deputadoResponse {
+export interface deputadoResponse {
   dados: Deputado[];
 }
 
