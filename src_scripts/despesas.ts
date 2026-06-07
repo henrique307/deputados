@@ -2,6 +2,8 @@ import { getDatabase, ref, set } from 'firebase/database';
 import { initializeApp, deleteApp } from 'firebase/app';
 import { firebaseConfig } from './firebase.config';
 import { fetchDeputados } from './fetchDeputados';
+import { setGlobalDispatcher } from 'undici';
+import { dispatcher } from './proxy.agent';
 
 const URL = 'https://dadosabertos.camara.leg.br/api/v2';
 const app = initializeApp(firebaseConfig);
@@ -14,7 +16,7 @@ interface Deputa {
   urlFoto: string;
 }
 
-async function fetchDespesaDaPuta(putaId: number) {
+async function fetchDespesa(putaId: number) {
   const res = await fetch(`${URL}/deputados/${putaId}/despesas`);
   return await res.json();
 }
@@ -96,26 +98,29 @@ function sanitizeKeys(data: any): any {
 }
 
 async function main() {
-  const resumoDasFestaDaPutas = [];
+  const despesas = [];
   const deputados = await fetchDeputados();
+
+  //Set Proxy Agent
+  setGlobalDispatcher(dispatcher);
 
   for (const puta of deputados) {
     console.log(`🔍 Buscando despesas de ${puta.nome}...`);
-    const despesasDaPuta = await fetchDespesaDaPuta(puta.id);
-    const resumo = gerarResumo(despesasDaPuta.dados, puta as Deputa);
-    resumoDasFestaDaPutas.push(resumo);
+    const despesa = await fetchDespesa(puta.id);
+    const resumo = gerarResumo(despesa.dados, puta as Deputa);
+    despesas.push(resumo);
   }
 
   // Função para escrever os dados JSON no Realtime Database
   const sanitizedJsonData = sanitizeKeys({
     updatedAt: new Date(),
-    despesas: resumoDasFestaDaPutas,
+    despesas: despesas,
   });
 
   // Chame a função para executar a operação
   writeJsonDataToDatabase(sanitizedJsonData);
 
-  console.log(`✅ Resumo de ${resumoDasFestaDaPutas.length} deputados salvo`);
+  console.log(`✅ Resumo de ${despesas.length} deputados salvo`);
 }
 
 main();

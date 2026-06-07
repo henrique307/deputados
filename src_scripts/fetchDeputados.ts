@@ -20,11 +20,11 @@ export async function fetchDeputados() {
   const res = await fetch(`${URL}/deputados`);
   const deputadosResponse: deputadoResponse = await res.json();
 
-  const deputados = deputadosResponse.dados.map((puta) => ({
-    id: puta.id,
-    nome: puta.nome,
-    email: puta.email,
-    urlFoto: puta.urlFoto,
+  const deputados = deputadosResponse.dados.map((deputado) => ({
+    id: deputado.id,
+    nome: deputado.nome,
+    email: deputado.email,
+    urlFoto: deputado.urlFoto,
   }));
 
   console.log(`✅ ${deputados.length} deputados salvos`);
