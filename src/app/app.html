@@ -11,12 +11,13 @@
   </nav>
 
   <app-money-banner 
-    [total]="totalMes"
-    [mesRef]="mesRef"
-    [qtdDeputados]="despesas.length"
+    [loading]="despesas().length === 0"
+    [total]="totalMes()"
+    [mesRef]="mesRef()"
+    [qtdDeputados]="despesas().length"
   />
 
-  <app-deputados-list [deputados]="despesas" />
+  <app-deputados-list [despesas]="despesas()" />
 
   <footer class="border-t border-ink/15 bg-secondary/40">
     <div class="mx-auto max-w-6xl px-6 py-10 text-sm text-muted-foreground">

@@ -22,6 +22,7 @@ export class MoneyBanner implements OnChanges {
     @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
 
+  @Input() loading = false;
   @Input() total = 0;
   @Input() mesRef = '';
   @Input() qtdDeputados = 0;

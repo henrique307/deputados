@@ -32,6 +32,7 @@ export const nomeMes = (ym: string) => {
 };
 
 export const ultimoMes = (porMes: Record<string, number>) => {
+  if (!porMes || Object.keys(porMes).length === 0) return null;
   const chaves = Object.keys(porMes).sort();
   return chaves[chaves.length - 1];
 };

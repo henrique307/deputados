@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "deputas_webapp": {
+    "deputados_webapp": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -59,10 +59,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "deputas_webapp:build:production"
+              "buildTarget": "deputados_webapp:build:production"
             },
             "development": {
-              "buildTarget": "deputas_webapp:build:development"
+              "buildTarget": "deputados_webapp:build:development"
             }
           },
           "defaultConfiguration": "development",
