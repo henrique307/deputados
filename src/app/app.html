@@ -10,20 +10,21 @@
     </div>
   </nav>
 
-  <app-money-banner 
-    [loading]="despesas().length === 0"
-    [total]="totalMes()"
-    [mesRef]="mesRef()"
-    [qtdDeputados]="despesas().length"
-  />
+  <app-money-banner [loading]="despesas().length === 0" [total]="totalMes()" [mesRef]="mesRef()"
+    [qtdDeputados]="despesas().length" />
 
   <app-deputados-list [despesas]="despesas()" />
 
   <footer class="border-t border-ink/15 bg-secondary/40">
     <div class="mx-auto max-w-6xl px-6 py-10 text-sm text-muted-foreground">
       <p>
-        Dados públicos da Câmara dos Deputados. Este projeto não tem vínculo institucional e existe
-        apenas para facilitar a leitura das despesas parlamentares.
+        Dados públicos extraidos da
+        <a href="https://dadosabertos.camara.leg.br/swagger/api.html" target="_blank" rel="noopener noreferrer"
+          class="underline decoration-ink/30 underline-offset-2 hover:decoration-ink">
+          API da Câmara dos Deputados
+        </a>
+        . Este projeto não tem vínculo institucional e existe apenas para facilitar a leitura das despesas
+        parlamentares.
       </p>
     </div>
   </footer>
