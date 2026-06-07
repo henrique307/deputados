@@ -1,5 +1,5 @@
 export const firebaseConfig = {
-  apiKey: "AIzaSyB1AkmwFkaJ3nt0DEQ_UOQioP3TXxCiqS8",
+  apiKey: process.env['FIREBASE_API_KEY'],
   authDomain: "deputados-3c63a.firebaseapp.com",
   databaseURL: 'https://deputados-3c63a-default-rtdb.firebaseio.com',
   projectId: "deputados-3c63a",
