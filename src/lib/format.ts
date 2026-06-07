@@ -36,3 +36,30 @@ export const ultimoMes = (porMes: Record<string, number>) => {
   const chaves = Object.keys(porMes).sort();
   return chaves[chaves.length - 1];
 };
+
+export function formatCpfCnpj(value: string): string {
+  if (!value) return 'Sem Identificação';
+
+  const digits = value.replace(/\D/g, '');
+
+  if (digits.length === 11) {
+    const cpf = digits
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+
+    return `CPF: ${cpf}`;
+  }
+
+  if (digits.length === 14) {
+    const cnpj = digits
+      .replace(/^(\d{2})(\d)/, '$1.$2')
+      .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+      .replace(/\.(\d{3})(\d)/, '.$1/$2')
+      .replace(/(\d{4})(\d)/, '$1-$2');
+
+    return `CNPJ: ${cnpj}`;
+  }
+
+  return digits;
+}

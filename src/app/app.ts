@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MoneyBanner } from './money-banner/money-banner';
 import { DeputadosList } from './deputados-list/deputados-list';
-import { ultimoMes } from '../lib/format';
+import { formatCpfCnpj, ultimoMes } from '../lib/format';
 import { Meta, Title } from '@angular/platform-browser';
 import { readDataFromDatabase } from '../lib/readDataFromDatabase';
 import { Despesa } from '../data/deputados';
@@ -124,40 +124,13 @@ export class App {
     }));
   }
 
-  private formatCpfCnpj(value: string): string {
-    if (!value) return 'Sem Identificação';
-
-    const digits = value.replace(/\D/g, '');
-
-    if (digits.length === 11) {
-      const cpf = digits
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-
-      return `CPF: ${cpf}`;
-    }
-
-    if (digits.length === 14) {
-      const cnpj = digits
-        .replace(/^(\d{2})(\d)/, '$1.$2')
-        .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
-        .replace(/\.(\d{3})(\d)/, '.$1/$2')
-        .replace(/(\d{4})(\d)/, '$1-$2');
-
-      return `CNPJ: ${cnpj}`;
-    }
-
-    return digits;
-  }
-
   fornecedoresOrdenados(deputa: Despesa) {
     return Object.entries(deputa.porFornecedor)
       .map(([nome, { total, quantidade, cnpjCpfFornecedor }]) => ({
         nome,
         total,
         quantidade,
-        cnpjCpfFornecedor: this.formatCpfCnpj(cnpjCpfFornecedor),
+        cnpjCpfFornecedor: formatCpfCnpj(cnpjCpfFornecedor),
       }))
       .sort((a, b) => b.total - a.total);
   }

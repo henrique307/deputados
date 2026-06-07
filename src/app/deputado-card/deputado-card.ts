@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Despesa } from '../../data/deputados';
-import { fmtBRL, nomeMes } from '../../lib/format';
+import { fmtBRL, formatCpfCnpj, nomeMes } from '../../lib/format';
 
 @Component({
   selector: 'app-deputado-card',
@@ -20,7 +20,8 @@ export class DeputadoCard {
 
   open = false;
   fmtBRL = fmtBRL
-
+  formatCpfCnpj = formatCpfCnpj;
+  
   toggle(): void {
     this.open = !this.open;
   }

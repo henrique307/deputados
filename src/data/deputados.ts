@@ -6,7 +6,7 @@ export type Despesa = {
   id: number;
   urlFoto: string;
   porMes: Record<string, number>;
-  porTipoDespesa: Record<string, { total: number; quantidade: number }>;
+  porTipoDespesa: Record<string, { total: number; quantidade: number; fornecedores: { nome: string; cnpjCpf: string; total: number; quantidade: number }[]; }>;
   porFornecedor: Record<string, { total: number; quantidade: number; cnpjCpfFornecedor: string }>;
 };
 

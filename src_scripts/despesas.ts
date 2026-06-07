@@ -32,7 +32,6 @@ async function writeJsonDataToDatabase(data: any) {
     deleteApp(app);
   }
 }
-
 function gerarResumo(despesas: any[], deputado: Deputado) {
   const resumo = {
     totalGeral: 0,
@@ -42,7 +41,11 @@ function gerarResumo(despesas: any[], deputado: Deputado) {
     id: deputado.id,
     urlFoto: deputado.urlFoto,
     porMes: {} as Record<string, number>,
-    porTipoDespesa: {} as Record<string, { total: number; quantidade: number }>,
+    porTipoDespesa: {} as Record<string, {
+      total: number;
+      quantidade: number;
+      fornecedores: { nome: string; cnpjCpf: string; total: number; quantidade: number }[];
+    }>,
     porFornecedor: {} as Record<
       string,
       { total: number; quantidade: number; cnpjCpfFornecedor: string }
@@ -61,16 +64,36 @@ function gerarResumo(despesas: any[], deputado: Deputado) {
     resumo.porMes[chaveMes] ??= 0;
     resumo.porMes[chaveMes] += valor;
 
-    resumo.porTipoDespesa[tipoDespesa] ??= { total: 0, quantidade: 0 };
+    resumo.porTipoDespesa[tipoDespesa] ??= { total: 0, quantidade: 0, fornecedores: [] };
     resumo.porTipoDespesa[tipoDespesa].total += valorLiquido;
     resumo.porTipoDespesa[tipoDespesa].quantidade++;
+
+    const fornecedoresTipo = resumo.porTipoDespesa[tipoDespesa].fornecedores;
+    fornecedoresTipo[nomeFornecedor] ??= { nome: nomeFornecedor, cnpjCpf: cnpjCpfFornecedor, total: 0, quantidade: 0 };
+    fornecedoresTipo[nomeFornecedor].total += valorLiquido;
+    fornecedoresTipo[nomeFornecedor].quantidade++;
 
     resumo.porFornecedor[nomeFornecedor] ??= { total: 0, quantidade: 0, cnpjCpfFornecedor };
     resumo.porFornecedor[nomeFornecedor].total += valorLiquido;
     resumo.porFornecedor[nomeFornecedor].quantidade++;
   }
 
-  return resumo;
+  // Converte fornecedores de objeto para array, ordenado por total desc
+  const porTipoDespesaFinal = Object.fromEntries(
+    Object.entries(resumo.porTipoDespesa).map(([tipo, dados]) => [
+      tipo,
+      {
+        total: dados.total,
+        quantidade: dados.quantidade,
+        fornecedores: Object.values(dados.fornecedores).sort((a, b) => b.total - a.total),
+      },
+    ])
+  );
+
+  return {
+    ...resumo,
+    porTipoDespesa: porTipoDespesaFinal,
+  };
 }
 
 function sanitizeKeys(data: any): any {
