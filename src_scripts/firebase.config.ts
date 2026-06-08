@@ -1,10 +1,12 @@
+import 'dotenv/config';
+
 export const firebaseConfig = {
   apiKey: process.env['FIREBASE_API_KEY'],
-  authDomain: "deputados-3c63a.firebaseapp.com",
-  databaseURL: 'https://deputados-3c63a-default-rtdb.firebaseio.com',
-  projectId: "deputados-3c63a",
-  storageBucket: "deputados-3c63a.firebasestorage.app",
-  messagingSenderId: "310135855829",
-  appId: "1:310135855829:web:28e215a17727393233a05c",
-  measurementId: "G-SX0PKCYZBT"
+  authDomain: process.env['AUTH_DOMAIN'],
+  databaseURL: process.env['DATABASE_URL'],
+  projectId: process.env['PROJECT_ID'],
+  storageBucket: process.env['STORAGE_BUCKET'],
+  messagingSenderId: process.env['MESSAGING_SENDER_ID'],
+  appId: process.env['APP_ID'],
+  measurementId: process.env['MEASUREMENT_ID'],
 };
