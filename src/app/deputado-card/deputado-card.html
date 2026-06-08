@@ -1,110 +1,156 @@
 <article class="group border-b border-ink/15 transition-colors hover:bg-ink/2.5">
-  <button type="button" (click)="toggle()"
-    class="grid w-full grid-cols-[auto_auto_1fr_auto] items-center gap-3 px-4 py-4 text-left sm:gap-6 sm:px-6 sm:py-5">
-    <span class="font-mono text-xs tabular-nums text-muted-foreground sm:text-sm">
-      {{ rank.toString().padStart(2, '0') }}
-    </span>
+  <button type="button" (click)="toggle()" class="w-full px-4 py-4 text-left sm:px-6 sm:py-5">
+    <div
+      class="grid grid-cols-[auto_auto_1fr] items-center gap-3 sm:grid-cols-[auto_auto_1fr_auto] sm:gap-6"
+    >
+      <!-- rank -->
+      <span class="font-mono text-xs tabular-nums text-muted-foreground sm:text-sm">
+        {{ rank.toString().padStart(2, '0') }}
+      </span>
 
-    <img [src]="d.urlFoto" [alt]="d.nome" loading="lazy" (error)="hideImage($event)"
-      class="h-10 w-10 rounded-full border border-ink/20 object-cover transition-all duration-300 group-hover:grayscale-0 sm:h-14 sm:w-14" />
+      <!-- foto -->
+      <img
+        [src]="d.urlFoto"
+        [alt]="d.nome"
+        loading="lazy"
+        (error)="hideImage($event)"
+        class="h-10 w-10 rounded-full border border-ink/20 object-cover transition-all duration-300 group-hover:grayscale-0 sm:h-14 sm:w-14"
+      />
 
-    <div class="min-w-0">
-      <div class="truncate font-display text-base leading-tight sm:text-2xl">
-        {{ d.nome }}
+      <!-- nome + barra + despesas + valor (mobile) -->
+      <div class="min-w-0">
+        <div class="truncate font-display text-base leading-tight sm:text-2xl">
+          {{ d.nome }}
+        </div>
+        <div class="mt-1 h-0.75 w-full overflow-hidden rounded-full bg-ink/10">
+          <div class="h-full bg-money" [style.width.%]="pct"></div>
+        </div>
+        <div class="mt-1 text-xs text-muted-foreground">{{ d.quantidadeDespesas }} despesas</div>
+
+        <!-- valor: visível só no mobile -->
+        <div class="mt-1 font-mono text-sm tabular-nums sm:hidden flex justify-between">
+          <span>
+            {{ fmtBRL(d.totalGeral) }}
+          </span>
+          <svg
+            class="h-4 w-4 shrink-0 text-muted-foreground transition-transform"
+            [class.rotate-180]="open"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
       </div>
 
-      <div class="mt-1 h-0.75 w-full overflow-hidden rounded-full bg-ink/10">
-        <div class="h-full bg-money" [style.width.%]="pct"></div>
-      </div>
-
-      <div class="mt-1 text-xs text-muted-foreground">
-        {{ d.quantidadeDespesas }} despesas
+      <!-- valor + chevron: visível só no desktop -->
+      <div class="hidden items-center gap-2 sm:flex sm:gap-3">
+        <div class="font-mono text-sm tabular-nums sm:text-lg">
+          {{ fmtBRL(d.totalGeral) }}
+        </div>
+        <svg
+          class="h-4 w-4 shrink-0 text-muted-foreground transition-transform"
+          [class.rotate-180]="open"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
       </div>
     </div>
 
-    <div class="flex items-center gap-2 sm:gap-3">
-      <div class="font-mono text-sm tabular-nums sm:text-xl">
-        {{ fmtBRL(d.totalGeral) }}
-      </div>
-
-      <svg class="h-4 w-4 shrink-0 text-muted-foreground transition-transform" [class.rotate-180]="open" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-      </svg>
-    </div>
+    
   </button>
 
   @if (open) {
-  <div
-    class="grid gap-6 border-t border-dashed border-ink/15 bg-secondary/40 px-4 py-5 sm:grid-cols-2 sm:gap-8 sm:px-6 sm:py-6">
-    <!-- Por tipo de despesa -->
-    <div>
-      <h3 class="mb-3 text-xs uppercase tracking-wider text-muted-foreground">
-        Por tipo de despesa
-      </h3>
+    <div
+      class="grid gap-6 border-t border-dashed border-ink/15 bg-secondary/40 px-4 py-5 sm:grid-cols-2 sm:gap-8 sm:px-6 sm:py-6"
+    >
+      <!-- Por tipo de despesa -->
+      <div>
+        <h3 class="mb-3 text-xs uppercase tracking-wider text-muted-foreground">
+          Por tipo de despesa
+        </h3>
 
-      <ul class="space-y-4">
-        @for (tipo of tipos; track `tipo-${$index}`) {
-        <li>
-          <!-- Cabeçalho do tipo -->
-          <div class="flex items-baseline justify-between gap-3 text-sm">
-            <span class="leading-snug">
-              {{ tipo[0].replace('.', '') }}
-            </span>
-            <span class="shrink-0 font-mono tabular-nums">
-              {{ fmtBRL(tipo[1].total) }}
-            </span>
-          </div>
-
-          <div class="mt-1 h-1 w-full overflow-hidden rounded bg-ink/10">
-            <div class="h-full bg-ink/70" [style.width.%]="(tipo[1].total / d.totalGeral) * 100"></div>
-          </div>
-
-          <!-- Fornecedores do tipo -->
-          @if (tipo[1].fornecedores.length) {
-          <ul class="mt-2 space-y-1.5">
-            @for (f of tipo[1].fornecedores; track f.cnpjCpf + $index) {
-            <li class="text-xs border-l-2 border-ink/10 pl-3">
-              <div class="flex items-baseline justify-between gap-2">
-                <span class="leading-snug text-foreground/80">{{ f.nome }}</span>
-                <span class="shrink-0 font-mono tabular-nums text-foreground/80">
-                  {{ fmtBRL(f.total) }}
+        <ul class="space-y-4">
+          @for (tipo of tipos; track `tipo-${$index}`) {
+            <li>
+              <!-- Cabeçalho do tipo -->
+              <div class="flex items-baseline justify-between gap-3 text-sm">
+                <span class="leading-snug">
+                  {{ tipo[0].replace('.', '') }}
+                </span>
+                <span class="shrink-0 font-mono tabular-nums">
+                  {{ fmtBRL(tipo[1].total) }}
                 </span>
               </div>
-              <div class="mt-0.5 text-muted-foreground">
-                {{ formatCpfCnpj(f.cnpjCpf) || 'CPF/CNPJ não informado' }}
-                · {{ f.quantidade }} {{ f.quantidade === 1 ? 'transação' : 'transações' }}
+
+              <div class="mt-1 h-1 w-full overflow-hidden rounded bg-ink/10">
+                <div
+                  class="h-full bg-ink/70"
+                  [style.width.%]="(tipo[1].total / d.totalGeral) * 100"
+                ></div>
               </div>
+
+              <!-- Fornecedores do tipo -->
+              @if (tipo[1].fornecedores.length) {
+                <ul class="mt-2 space-y-1.5">
+                  @for (f of tipo[1].fornecedores; track f.cnpjCpf + $index) {
+                    <li class="text-xs border-l-2 border-ink/10 pl-3">
+                      <div class="flex items-baseline justify-between gap-2">
+                        <span class="leading-snug text-foreground/80">{{ f.nome }}</span>
+                        <span class="shrink-0 font-mono tabular-nums text-foreground/80">
+                          {{ fmtBRL(f.total) }}
+                        </span>
+                      </div>
+                      <div class="mt-0.5 text-muted-foreground">
+                        {{ formatCpfCnpj(f.cnpjCpf) || 'CPF/CNPJ não informado' }}
+                        · {{ f.quantidade }} {{ f.quantidade === 1 ? 'transação' : 'transações' }}
+                      </div>
+                    </li>
+                  }
+                </ul>
+              }
             </li>
-            }
-          </ul>
           }
-        </li>
-        }
-      </ul>
-    </div>
+        </ul>
+      </div>
 
-    <!-- Por mês + contato -->
-    <div>
-      <h3 class="mb-3 text-xs uppercase tracking-wider text-muted-foreground">Por mês</h3>
+      <!-- Por mês + contato -->
+      <div>
+        <h3 class="mb-3 text-xs uppercase tracking-wider text-muted-foreground">Por mês</h3>
 
-      <ul class="space-y-2">
-        @for (mes of meses; track `mes-${$index}`) {
-        <li class="flex items-baseline justify-between gap-3 text-sm">
-          <span class="first-letter:capitalize">{{ nomeMes(mes[0]) }}</span>
-          <span class="shrink-0 font-mono tabular-nums">{{ fmtBRL(mes[1]) }}</span>
-        </li>
-        }
-      </ul>
+        <ul class="space-y-2">
+          @for (mes of meses; track `mes-${$index}`) {
+            <li class="flex items-baseline justify-between gap-3 text-sm">
+              <span class="first-letter:capitalize">{{ nomeMes(mes[0]) }}</span>
+              <span class="shrink-0 font-mono tabular-nums">{{ fmtBRL(mes[1]) }}</span>
+            </li>
+          }
+        </ul>
 
-      <div class="mt-5 text-xs text-muted-foreground">
-        <span class="font-medium text-foreground">Contato: </span>
-        <a [href]="'mailto:' + d.email"
-          class="break-all underline decoration-ink/30 underline-offset-2 hover:decoration-ink">
-          {{ d.email }}
-        </a>
+        <div class="mt-5 text-xs text-muted-foreground">
+          <span class="font-medium text-foreground">Contato: </span>
+          <a
+            [href]="'mailto:' + d.email"
+            class="break-all underline decoration-ink/30 underline-offset-2 hover:decoration-ink"
+          >
+            {{ d.email }}
+          </a>
+        </div>
       </div>
     </div>
-  </div>
   }
 </article>
