@@ -1,4 +1,4 @@
-import { ProxyAgent, setGlobalDispatcher } from 'undici';
+import { ProxyAgent } from 'undici';
 
 export const dispatcher = new ProxyAgent({
   uri: 'http://64.137.96.74:6641',
