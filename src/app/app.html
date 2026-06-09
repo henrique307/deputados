@@ -10,8 +10,30 @@
     </div>
   </nav>
 
-  <app-money-banner [loading]="despesas().length === 0" [total]="totalMes()" [mesRef]="mesRef()"
-    [qtdDeputados]="despesas().length" />
+  <app-money-banner
+    [loading]="despesas().length === 0"
+    [total]="totalMes()"
+    [mesRef]="mesRef()"
+    [qtdDeputados]="despesas().length"
+  />
+
+  <script
+    async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6641669376224020"
+    crossorigin="anonymous"
+  ></script>
+  <!-- anuncio -->
+  <ins
+    class="adsbygoogle"
+    style="display: block"
+    data-ad-client="ca-pub-6641669376224020"
+    data-ad-slot="4932360106"
+    data-ad-format="auto"
+    data-full-width-responsive="true"
+  ></ins>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
 
   <app-deputados-list [despesas]="despesas()" />
 
@@ -19,12 +41,16 @@
     <div class="mx-auto max-w-6xl px-6 py-10 text-sm text-muted-foreground text-center">
       <p>
         Dados públicos extraidos da
-        <a href="https://dadosabertos.camara.leg.br/swagger/api.html" target="_blank" rel="noopener noreferrer"
-          class="underline decoration-ink/30 underline-offset-2 hover:decoration-ink">
+        <a
+          href="https://dadosabertos.camara.leg.br/swagger/api.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline decoration-ink/30 underline-offset-2 hover:decoration-ink"
+        >
           API da Câmara dos Deputados
         </a>
-        . Este projeto não tem vínculo institucional e existe apenas para facilitar a leitura das despesas
-        parlamentares.
+        . Este projeto não tem vínculo institucional e existe apenas para facilitar a leitura das
+        despesas parlamentares.
       </p>
     </div>
   </footer>
