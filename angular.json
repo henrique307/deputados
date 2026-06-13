@@ -25,6 +25,7 @@
                 "input": "public"
               },
               "src/sitemap.xml",
+              "src/robots.txt",
               {
                 "glob": "ads.txt",
                 "input": "src",
