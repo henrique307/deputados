@@ -7,14 +7,20 @@ setGlobalDispatcher(dispatcher);
 import { getDatabase, ref, set } from 'firebase/database';
 import { initializeApp, deleteApp } from 'firebase/app';
 import { firebaseConfig } from './firebase.config';
-import { Deputado, fetchDeputados } from './fetchDeputados';
+import { fetchDeputados } from './fetchDeputados';
+import { Deputado, DeputadoDetalhes, DeputadoDetalhesResponse, Despesa, DespesasResponse } from './types';
 
 const URL = 'https://dadosabertos.camara.leg.br/api/v2';
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app); // Obtenha uma referência para o Realtime Database
 
-async function fetchDespesa(putaId: number) {
-  const res = await fetch(`${URL}/deputados/${putaId}/despesas`);
+async function fetchDetalhesDeputado(deputadoId: number): Promise<DeputadoDetalhesResponse> {
+  const res = await fetch(`${URL}/deputados/${deputadoId}`);
+  return await res.json();
+}
+
+async function fetchDespesa(deputadoId: number): Promise<DespesasResponse> {
+  const res = await fetch(`${URL}/deputados/${deputadoId}/despesas`);
   return await res.json();
 }
 
@@ -32,20 +38,28 @@ async function writeJsonDataToDatabase(data: any) {
     deleteApp(app);
   }
 }
-function gerarResumo(despesas: any[], deputado: Deputado) {
+function gerarResumo(despesas: any[], deputado: DeputadoDetalhes) {
+  const dados = deputado.dados;
   const resumo = {
     totalGeral: 0,
     quantidadeDespesas: despesas.length,
-    nome: deputado.nome,
-    email: deputado.email,
-    id: deputado.id,
-    urlFoto: deputado.urlFoto,
+    nome: dados.ultimoStatus.nome,
+    email: dados.ultimoStatus.email,
+    id: dados.id,
+    urlFoto: dados.ultimoStatus.urlFoto,
+    siglaPartido: dados.ultimoStatus.siglaPartido,
+    siglaUf: dados.ultimoStatus.siglaUf,
+    urlCamara: `https://www.camara.leg.br/deputados/${dados.id}`,
     porMes: {} as Record<string, number>,
-    porTipoDespesa: {} as Record<string, {
-      total: number;
-      quantidade: number;
-      fornecedores: { nome: string; cnpjCpf: string; total: number; quantidade: number }[];
-    }>,
+    redesSociais: dados.redeSocial,
+    porTipoDespesa: {} as Record<
+      string,
+      {
+        total: number;
+        quantidade: number;
+        fornecedores: { nome: string; cnpjCpf: string; total: number; quantidade: number }[];
+      }
+    >,
     porFornecedor: {} as Record<
       string,
       { total: number; quantidade: number; cnpjCpfFornecedor: string }
@@ -69,7 +83,12 @@ function gerarResumo(despesas: any[], deputado: Deputado) {
     resumo.porTipoDespesa[tipoDespesa].quantidade++;
 
     const fornecedoresTipo = resumo.porTipoDespesa[tipoDespesa].fornecedores;
-    fornecedoresTipo[nomeFornecedor] ??= { nome: nomeFornecedor, cnpjCpf: cnpjCpfFornecedor, total: 0, quantidade: 0 };
+    fornecedoresTipo[nomeFornecedor] ??= {
+      nome: nomeFornecedor,
+      cnpjCpf: cnpjCpfFornecedor,
+      total: 0,
+      quantidade: 0,
+    };
     fornecedoresTipo[nomeFornecedor].total += valorLiquido;
     fornecedoresTipo[nomeFornecedor].quantidade++;
 
@@ -87,7 +106,7 @@ function gerarResumo(despesas: any[], deputado: Deputado) {
         quantidade: dados.quantidade,
         fornecedores: Object.values(dados.fornecedores).sort((a, b) => b.total - a.total),
       },
-    ])
+    ]),
   );
 
   return {
@@ -122,10 +141,11 @@ async function main() {
 
   const deputados = await fetchDeputados();
 
-  for (const deputado of deputados) {
-    console.log(`🔍 Buscando despesas de ${deputado.nome}...`);
+  for (const deputado of deputados.dados) {
+    console.log(`🔍 Buscando de ${deputado.nome}...`);
+    const detalhes = await fetchDetalhesDeputado(deputado.id);
     const despesa = await fetchDespesa(deputado.id);
-    const resumo = gerarResumo(despesa.dados, deputado as Deputado);
+    const resumo = gerarResumo(despesa.dados, detalhes);
     despesas.push(resumo);
   }
 
@@ -138,7 +158,7 @@ async function main() {
   // Chame a função para executar a operação
   writeJsonDataToDatabase(sanitizedJsonData);
 
-  console.log(`✅ Resumo de ${despesas.length} deputados salvo`);
+  console.log(`✅ Resumo de ${despesas.length} deputados salvos`);
 }
 
 main();
