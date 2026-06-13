@@ -36,7 +36,6 @@ async function writeJsonDataToDatabase(data: any) {
     deleteApp(app);
   }
 }
-
 function gerarResumo(despesas: any[], deputado: DeputadoDetalhes) {
   const dados = deputado.dados;
   const resumo = {

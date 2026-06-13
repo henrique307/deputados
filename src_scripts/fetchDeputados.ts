@@ -1,5 +1,3 @@
-import { DeputadosResponse } from "../types";
-
 export const URL = "https://dadosabertos.camara.leg.br/api/v2";
 
 export async function fetchDeputados(): Promise<DeputadosResponse> {
