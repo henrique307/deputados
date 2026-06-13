@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Despesa } from '../../data/deputados';
+import { Component, Input } from '@angular/core';
 import { DeputadoCard } from '../deputado-card/deputado-card';
 import { LucideAngularModule, Search } from 'lucide-angular';
 import { FormsModule } from '@angular/forms';
@@ -13,7 +12,7 @@ type Sort = 'maior' | 'menor' | 'az';
 })
 export class DeputadosList {
   @Input({ required: true })
-  despesas: Despesa[] = [];
+  despesas: DeputadoDespesas[] = [];
 
   q = '';
   sort: Sort = 'maior';
@@ -25,11 +24,15 @@ export class DeputadosList {
     ['az', 'A–Z'],
   ];
 
-  get filtrados(): Despesa[] {
+  get filtrados(): DeputadoDespesas[] {
     const term = this.q.trim().toLowerCase();
 
     const base = term
-      ? this.despesas.filter((d) => d.nome.toLowerCase().includes(term))
+      ? this.despesas.filter(
+          (d) =>
+            d.nome.toLowerCase().includes(term) ||
+            d.siglaPartido.toLocaleLowerCase().includes(term),
+        )
       : [...this.despesas];
 
     return base.sort((a, b) => {
@@ -49,7 +52,7 @@ export class DeputadosList {
     return Math.max(...this.despesas.map((d) => d.totalGeral), 1);
   }
 
-  trackByDeputado(_: number, deputado: Despesa): number {
+  trackByDeputado(_: number, deputado: DeputadoDespesas): number {
     return deputado.id;
   }
 }

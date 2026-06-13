@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import "@tabler/icons-webfont/dist/tabler-icons.css";
 
 @custom-variant dark (&:is(.dark *));
 

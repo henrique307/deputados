@@ -7,7 +7,6 @@ import { DeputadosList } from './deputados-list/deputados-list';
 import { formatCpfCnpj, ultimoMes } from '../lib/format';
 import { Meta, Title } from '@angular/platform-browser';
 import { readDataFromDatabase } from '../lib/readDataFromDatabase';
-import { Despesa } from '../data/deputados';
 
 @Component({
   selector: 'app-root',
@@ -18,13 +17,8 @@ import { Despesa } from '../data/deputados';
 export class App {
   protected readonly title = signal('deputados_webapp');
 
-  constructor(
-    private meta: Meta,
-    private seoTitle: Title,
-  ) { }
-
   pesquisa = new FormControl('');
-  despesas = signal<Despesa[]>([]);
+  despesas = signal<DeputadoDespesas[]>([]);
 
   mesRef = computed(
     () =>
@@ -38,12 +32,14 @@ export class App {
   totalMes = computed(() => this.despesas().reduce((acc, d) => acc + (d.totalGeral ?? 0), 0));
 
   async ngOnInit() {
-    const data: Despesa[] = (await readDataFromDatabase('/')).despesas;
+    const data: DeputadoDespesas[] = (await readDataFromDatabase('/')).despesas;
+
+    console.log(data.filter(item => !!item.urlWebsite))
 
     this.despesas.set(data);
   }
 
-  initials(deputa: Despesa): string {
+  initials(deputa: DeputadoDespesas): string {
     return deputa.nome
       .split(' ')
       .filter((n) => n.length > 2)
@@ -52,7 +48,7 @@ export class App {
       .join('');
   }
 
-  meses(deputa: Despesa) {
+  meses(deputa: DeputadoDespesas) {
     return Object.entries(deputa.porMes).map(([key, valor]) => {
       const [ano, mes] = key.split('-');
       const label = new Date(+ano, +mes - 1).toLocaleDateString('pt-BR', {
@@ -63,7 +59,7 @@ export class App {
     });
   }
 
-  tipos(deputa: Despesa) {
+  tipos(deputa: DeputadoDespesas) {
     const barClasses = ['bg-amber-400', 'bg-teal-400', 'bg-purple-400', 'bg-rose-400'];
     return Object.entries(deputa.porTipoDespesa).map(([nome, { total, quantidade }], i) => ({
       nome: nome
@@ -76,7 +72,7 @@ export class App {
     }));
   }
 
-  fornecedoresOrdenados(deputa: Despesa) {
+  fornecedoresOrdenados(deputa: DeputadoDespesas) {
     return Object.entries(deputa.porFornecedor)
       .map(([nome, { total, quantidade, cnpjCpfFornecedor }]) => ({
         nome,

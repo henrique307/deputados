@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { Despesa } from '../../data/deputados';
 import { fmtBRL, formatCpfCnpj, nomeMes } from '../../lib/format';
 
 @Component({
@@ -10,7 +9,7 @@ import { fmtBRL, formatCpfCnpj, nomeMes } from '../../lib/format';
 })
 export class DeputadoCard {
   @Input({ required: true })
-  d!: Despesa;
+  d!: DeputadoDespesas;
 
   @Input({ required: true })
   rank!: number;

@@ -20,7 +20,8 @@
       <!-- nome + barra + despesas + valor (mobile) -->
       <div class="min-w-0">
         <div class="truncate font-display text-base leading-tight sm:text-2xl">
-          {{ d.nome }}
+          <span> {{ d.nome }} </span>
+          <span class="text-xs opacity-70"> ({{ d.siglaPartido }} - {{ d.siglaUf }}) </span>
         </div>
         <div class="mt-1 h-0.75 w-full overflow-hidden rounded-full bg-ink/10">
           <div class="h-full bg-money" [style.width.%]="pct"></div>
@@ -70,8 +71,6 @@
         </svg>
       </div>
     </div>
-
-    
   </button>
 
   @if (open) {
@@ -141,14 +140,65 @@
           }
         </ul>
 
-        <div class="mt-5 text-xs text-muted-foreground">
-          <span class="font-medium text-foreground">Contato: </span>
-          <a
-            [href]="'mailto:' + d.email"
-            class="break-all underline decoration-ink/30 underline-offset-2 hover:decoration-ink"
-          >
-            {{ d.email }}
-          </a>
+        <div class="mt-5 text-muted-foreground gap-2 flex flex-col">
+          <h3 class="font-medium text-foreground">Contatos</h3>
+          <div class="text-xs">
+            <span class="font-medium text-foreground">Perfil:</span>
+            <a
+              [href]="d.urlCamara"
+              target="_blank"
+              class="break-all underline decoration-ink/30 underline-offset-2 hover:decoration-ink"
+            >
+              {{ d.urlCamara }}
+            </a>
+          </div>
+          @if (d.urlWebsite) {
+            <div class="text-xs">
+              <span class="font-medium text-foreground">Website:</span>
+              <a
+                [href]="d.urlWebsite"
+                target="_blank"
+                class="break-all underline decoration-ink/30 underline-offset-2 hover:decoration-ink"
+              >
+                {{ d.urlWebsite }}
+              </a>
+            </div>
+          }
+          <div class="text-xs">
+            <span class="font-medium text-foreground">Email:</span>
+            <a
+              [href]="'mailto:' + d.gabinete.email"
+              class="break-all underline decoration-ink/30 underline-offset-2 hover:decoration-ink"
+            >
+              {{ d.gabinete.email }}
+            </a>
+          </div>
+          @if (d.redesSociais) {
+            <div class="text-xs flex gap-2">
+              <span class="font-medium text-foreground">Redes:</span>
+              @for (rede of d.redesSociais; track rede) {
+                <a
+                  [href]="rede"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center decoration-ink/30 hover:decoration-ink text-xl"
+                >
+                  <i
+                    class="ti"
+                    [class.ti-brand-x]="rede.includes('twitter.com') || rede.includes('x.com')"
+                    [class.ti-brand-facebook]="rede.includes('facebook.com')"
+                    [class.ti-brand-instagram]="rede.includes('instagram.com')"
+                    [class.ti-brand-youtube]="rede.includes('youtube.com')"
+                    [class.ti-brand-tiktok]="rede.includes('tiktok.com')"
+                    [class.ti-brand-linkedin]="rede.includes('linkedin.com')"
+                    [class.ti-world]="!['twitter.com','x.com','facebook.com','instagram.com','youtube.com','tiktok.com','linkedin.com'].some(d => rede.includes(d))"
+                  ></i>
+                </a>
+              }
+            </div>
+          } @else {
+            <span class="text-xs">Nenhuma rede social registradas</span>
+          }
         </div>
       </div>
     </div>
